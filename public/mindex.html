@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+     <!-- jQuery -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+
+    <!-- Firebase -->
+    <script src='https://cdn.firebase.com/js/client/2.0.2/firebase.js'></script>
+
+    <!-- Firechat -->
+    <link rel='stylesheet' href='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.min.css' />
+    <script src='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.min.js'></script>
+  </head>
+  <body ng-app="starter">
+
+    <ion-pane>
+      <ion-header-bar class="bar-stable">
+        <img src="" id="DP" style="
+    width: 10%;
+    border-radius: 50%;
+    display: none;
+">
+<span class="title" id="UserName" style="text-align:right">Anup Chat App</span>
+      </ion-header-bar>
+      <ion-content style="
+    background-color: #00ad54;
+">
+
+
+<body style="background-color: #00ad54;">
+    <script type='text/javascript'>
+
+      // Create a new Firebase reference, and a new instance of the Login client
+      var chatRef = new Firebase('https://anup-chat-app.firebaseio.com/chat');
+      chatRef.onAuth(function(authData) {
+        // Once authenticated, instantiate Firechat with our user id and user name
+        if (authData) {
+          var chat = new FirechatUI(chatRef, document.getElementById('firechat-wrapper'));
+          chat.setUser(authData.uid, authData[authData.provider].displayName);
+          console.log(authData);
+
+          if(authData.auth.provider=="google")
+         { $('#DP').attr('src',authData.google.profileImageURL);
+          $('#UserName').text(authData.google.displayName);}
+          else if (authData.auth.provider=="facebook") 
+          {$('#DP').attr('src',authData.facebook.profileImageURL);
+          $('#UserName').text(authData.facebook.displayName);
+          }
+
+          $('#DP').fadeIn(500);
+        }
+      });
+      function login(provider) {
+        chatRef.authWithOAuthPopup(provider, function(error, authData) {
+          if (error) {
+            window.location.replace('index.html');
+            console.log(error);
+          }
+        });
+
+//         var ref = new Firebase("https://anup-chat-app.firebaseio.com");
+// ref.authWithOAuthPopup("facebook", function(error, authData) {
+//   if (error) {
+//     console.log("Login Failed!", error);
+//   } else {
+//     console.log("Authenticated successfully with payload:", authData , " Name : ", authData.facebook.name);
+//   }
+// },
+// {
+// 	scope:"name,email,user_friends,picture"
+// });
+
+
+// var ref = new Firebase("https://anup-chat-app.firebaseio.com");
+// ref.authWithOAuthPopup("google", function(error, authData) {
+//   if (error) {
+//     console.log("Login Failed!", error);
+//   } else {
+//     console.log("Authenticated successfully with payload:", authData);
+//   }
+// });
+
+      }
+    </script>
+
+     
+
+    <center>
+     
+    
+    <img src="show.jpg" id="back">
+    
+   
+    
+   <div id='firechat-wrapper'>
+      <a href='#' onclick='login("facebook"); $("#back, a").fadeOut(500);'><img src="facebook.png" style="width:30%"></a><br><br>
+      <a href='#' onclick='login("google"); $("#back, a").fadeOut(500)'><img src="google.png" style="width:30%"></a>
+    </div>
+    
+    </center>
+  </body>
+
+
+      </ion-content>
+    </ion-pane>
+  </body>
+</html>
